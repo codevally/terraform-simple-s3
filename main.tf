@@ -1,11 +1,11 @@
+resource "aws_kms_key" "mykey" {
+   description             = "This key is used to encrypt bucket objects"
+   deletion_window_in_days = 10
+}
+
 resource "aws_s3_bucket" "b" {
   bucket = "my-tf-test-bucket-1234"
   acl    = "private"
-  
-  resource "aws_kms_key" "mykey" {
-    description             = "This key is used to encrypt bucket objects"
-    deletion_window_in_days = 10
-  }
   
   tags = {
     Name        = "My bucket"
