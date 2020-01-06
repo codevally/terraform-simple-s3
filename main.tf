@@ -1,6 +1,11 @@
 resource "aws_kms_key" "mykey" {
    description             = "This key is used to encrypt bucket objects"
    deletion_window_in_days = 10
+   tags = {
+    Name        = "My KMS Key"
+    Environment = "Sandbox"
+    Owner       = "Narendra Yala"
+  }
 }
 
 resource "aws_s3_bucket" "b" {
@@ -8,8 +13,8 @@ resource "aws_s3_bucket" "b" {
   acl    = "private"
   
   tags = {
-    Name        = "My bucket"
-    Environment = "Dev"
+    Name        = "My S3 test bucket"
+    Environment = "Sandbox"
     Owner       = "Narendra Yala"
   }
   
