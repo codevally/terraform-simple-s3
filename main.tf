@@ -15,7 +15,8 @@ resource "aws_s3_bucket" "b" {
   tags = {
     Name        = "My S3 test bucket"
     Environment = "Sandbox"
-    Owner       = "Narendra Yala"
+    Owner       = "Narendra Yala",
+    DataType    = "Test files"  
   }
   
   server_side_encryption_configuration {
