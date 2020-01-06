@@ -18,8 +18,7 @@ resource "aws_s3_bucket" "b" {
     Owner       = "Narendra Yala",
     DataType    = "Test files"  
   }
-  
-   /*
+ 
   server_side_encryption_configuration {
     rule {
       apply_server_side_encryption_by_default {
@@ -27,6 +26,6 @@ resource "aws_s3_bucket" "b" {
         sse_algorithm     = "aws:kms"
       }
     }
-  }*/
+  }
     
 }
