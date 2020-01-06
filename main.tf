@@ -10,7 +10,7 @@ resource "aws_s3_bucket" "b" {
   tags = {
     Name        = "My bucket"
     Environment = "Dev"
-    Owner       = "Narendra"
+    Owner       = "Narendra Yala"
   }
   
   server_side_encryption_configuration {
