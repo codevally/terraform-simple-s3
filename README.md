@@ -37,3 +37,16 @@ where 20 is you minimum allowed threshold value.
 
 data.terraform.analysis.violation will output the error messages, refer to this git issue log to understand more about violation
 https://github.com/open-policy-agent/opa/issues/2104
+
+
+Missing required tags and , creating bucket in invalid region will output following errors 
+
+```
++------------+--------------------------------+
+| authorized |           violations           |
++------------+--------------------------------+
+| false      | ["missing required             |
+|            | tags","bucket region shoule be |
+|            | in us-east-1 "]             |
++------------+--------------------------------+
+```
