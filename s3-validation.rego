@@ -20,6 +20,10 @@ resource_types = {"aws_s3_bucket"}
 
 minimum_tags = {"Name", "app:name"}
 
+violations = data.terraform.analysis.violation
+authorized = data.terraform.analysis.authz
+
+
 #########
 # Policy
 #########
@@ -73,17 +77,43 @@ resources[resource_type] = all {
     ]
 }
 
-# Enforce S3 bucket region to us-east-1
+
+#print validation errors to console
+
+violation["missing required tags"] {
+   s3_tags_change[resource_types[_]] > 0
+}
+
+violation["bucket region shoule be in eu-central-1 "] {
+   s3_region_change[resource_types[_]] > 0
+}
+
+violation["bucket acl property should be private unless it is a website bucket "] {
+   s3_acl_change[resource_types[_]] > 0
+}
+
+violation["bucket should be encrypted with AES256/KMS "] {
+   s3_encryption_change[resource_types[_]] > 0
+}
+
+violation["bucket logging should be enabled "] {
+   s3_logging_change[resource_types[_]] > 0
+}
+
+
+# Validte each compliance rule.
+
+# Enforce S3 bucket region to eu-central-1
 s3_region_change[resource_type] = num {
     some resource_type
     resource_types[resource_type]
     all := resources[resource_type]
-    creates := [res |  res:= all[_]; res.change.after.region != "us-east-1"]
+    creates := [res |  res:= all[_]; res.change.after.region != "eu-central-1"]
     num := count(creates)
 }
 
 
-# S3 acl property , bucket ACL can't be private unless its is a website hosting bucket.
+# S3 acl property , bucket ACL can't be public unless its is a website hosting bucket.
 s3_acl_change[resource_type] = num {
     some resource_type
     resource_types[resource_type]
