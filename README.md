@@ -26,7 +26,7 @@ OPA commands
 3. terraform show -json tfplan.binary > tfplan.json
 4. opa eval --format pretty --data s3-validate.rego --input tfplan.json "data.terraform.analysis.score"
 5. opa eval --format pretty --data s3-validate.rego --input tfplan.json "data.terraform.analysis.authz"
-6. opa eval -f pretty --explain=notes  --data rds-validate.rego --input tfplan.json "authorized = data.terraform.analysis.authz; violations = data.terraform.analysis.violation"
+6. opa eval -f pretty --explain=notes  --data s3-validate.rego --input tfplan.json "authorized = data.terraform.analysis.authz; violations = data.terraform.analysis.violation"
 ```
 
 "data.terraform.analysis.authz" returns true / false indicating success of failure of evaluation of policies
