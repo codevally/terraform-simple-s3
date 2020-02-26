@@ -50,6 +50,6 @@ opa eval -f pretty --explain=notes  --data s3-validate.rego --input tfplan.json 
 +------------+--------------------------------+
 | false      | ["missing required             |
 |            | tags","bucket region shoule be |
-|            | in us-east-1 "]             |
+|            | in eu-cantral-1 "]             |
 +------------+--------------------------------+
 ```
