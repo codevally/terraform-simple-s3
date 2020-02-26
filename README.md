@@ -42,6 +42,9 @@ https://github.com/open-policy-agent/opa/issues/2104
 Missing required tags and , creating bucket in invalid region will output following errors 
 
 ```
+command : 
+opa eval -f pretty --explain=notes  --data s3-validate.rego --input tfplan.json "authorized = data.terraform.analysis.authz; violations = data.terraform.analysis.violation"
+
 +------------+--------------------------------+
 | authorized |           violations           |
 +------------+--------------------------------+
