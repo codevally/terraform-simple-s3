@@ -12,7 +12,7 @@ blast_radius = 5
 # weights assigned for each operation on each resource-type
 weights = {
     "aws_autoscaling_group": {"delete": 100, "create": 10, "modify": 1},
-    "aws_s3_bucket": {"acl": 10, "ssl": 10, "logs": 5, "sse": 10, "tags": 10, "region":10, "logging":10}
+    "aws_s3_bucket": {"acl": 10, "ssl": 10, "logs": 5, "sse": 10, "tags": 10, "region":10, "logging":10, "name":10}
 }
 
 # Consider exactly these resource types in calculations
@@ -45,7 +45,8 @@ score = s {
             sse_chg := crud["sse"] * s3_encryption_change[resource_type];
             tags_chg := crud["tags"] * s3_tags_change[resource_type];
             logging_chg := crud["logging"] * s3_logging_change[resource_type];
-            x := acl_chg + region_chg + sse_chg + tags_chg + logging_chg
+            name := crud["name"] * s3_name_change[resource_type];
+            x := acl_chg + region_chg + sse_chg + tags_chg + logging_chg + name
     ]
     s := sum(all)
 }
@@ -84,7 +85,7 @@ violation["missing required tags"] {
    s3_tags_change[resource_types[_]] > 0
 }
 
-violation["bucket region shoule be in eu-central-1 "] {
+violation["bucket region shoule be in eu-central-1"] {
    s3_region_change[resource_types[_]] > 0
 }
 
@@ -100,6 +101,10 @@ violation["bucket logging should be enabled "] {
    s3_logging_change[resource_types[_]] > 0
 }
 
+violation["bucket name should start with my- "] {
+   s3_name_change[resource_types[_]] > 0
+}
+
 
 # Validte each compliance rule.
 
@@ -110,6 +115,15 @@ s3_region_change[resource_type] = num {
     all := resources[resource_type]
     creates := [res |  res:= all[_]; res.change.after.region != "eu-central-1"]
     num := count(creates)
+}
+
+# S3 bucket name should match a given pattern. - regex.
+s3_name_change[resource_type] = num {
+    some resource_type
+    resource_types[resource_type]
+    all := resources[resource_type]
+    modifies := [res |  res:= all[_]; not is_proper_name(res.change.after.bucket)]
+    num := count(modifies)
 }
 
 
@@ -163,4 +177,8 @@ tags_contain_proper_keys(tags) {
 
 contains(arr, elem) {
   arr[_] = elem
+}
+
+is_proper_name(name) {
+    re_match(`my-?[a-zA-Z0-9()]`, name)
 }
